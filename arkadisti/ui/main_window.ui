@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>807</width>
+    <height>766</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>Arkadisti Launcher</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QListView" name="gamesView">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>256</width>
+      <height>551</height>
+     </rect>
+    </property>
+    <property name="tabKeyNavigation">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="playButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>680</y>
+      <width>91</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Hrej (F1)</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="settingsButton">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>680</y>
+      <width>80</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Nastavení</string>
+    </property>
+   </widget>
+   <widget class="QTableView" name="resultsTable">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>10</y>
+      <width>531</width>
+      <height>551</height>
+     </rect>
+    </property>
+    <property name="selectionBehavior">
+     <enum>QAbstractItemView::SelectRows</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="downloadButton">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>680</y>
+      <width>111</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Stáhni data (F3)</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="replayButton">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>680</y>
+      <width>86</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Replay (F2)</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="logView">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>570</y>
+      <width>791</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>807</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <tabstops>
+  <tabstop>gamesView</tabstop>
+  <tabstop>resultsTable</tabstop>
+  <tabstop>logView</tabstop>
+  <tabstop>playButton</tabstop>
+  <tabstop>replayButton</tabstop>
+  <tabstop>downloadButton</tabstop>
+  <tabstop>settingsButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

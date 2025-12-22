@@ -1,0 +1,58 @@
+[project]
+name = "arkadisti"
+version = "1.0"
+dependencies = [
+    "pandas",
+    "pyside6",
+    "lxml",
+    "requests",
+    "bs4",
+    "tables",
+]
+
+[project.optional-dependencies]
+lint = [
+  "ruff",
+]
+dev = [
+  "pyinstaller",
+  "rapidfuzz",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.pyside6-project]
+files = [
+  "LICENSE",
+  "README.md",
+  "main.py",
+  "arkadisti/config_manager.py",
+  "arkadisti/games_model.py",
+  "arkadisti/main_window.py",
+  "arkadisti/res/arkadisti.qrc",
+  "arkadisti/results_model.py",
+  "arkadisti/scraper.py",
+  "arkadisti/screenshot_window.py",
+  "arkadisti/settings_dialog.py",
+  "arkadisti/storage_manager.py",
+  "arkadisti/ui/main_window.ui",
+  "arkadisti/ui/screenshot_window.ui",
+]
+
+[tool.ruff]
+line-length = 79
+indent-width = 4
+exclude = [
+  "rc_*.py",
+  "ui_*.py",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"

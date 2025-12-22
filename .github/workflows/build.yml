@@ -1,0 +1,58 @@
+name: Build with Nuitka
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+          architecture: 'x64'
+          cache: pip
+          cache-dependency-path: |
+            **/requirements*.txt
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -e .
+
+      - name: Generate ui->py
+        run: |
+          pyside6-uic arkadisti/ui/screenshot_window.ui -o arkadisti/ui/ui_screenshot_window.py
+          pyside6-uic arkadisti/ui/main_window.ui -o arkadisti/ui/ui_main_window.py
+          pyside6-rcc arkadisti/res/arkadisti.qrc -o arkadisti/res/rc_arkadisti.py
+
+      - name: Build executable with Nuitka
+        uses: Nuitka/Nuitka-Action@main
+        with:
+          nuitka-version: main
+          script-name: main.py
+          mode: onefile
+          enable-plugins: pyside6
+          include-module: lxml.html
+          windows-console-mode: disable
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ runner.os }} Build
+          path: |
+            build/*.exe
+            build/*.bin
+            build/*.app/**/*  
+          include-hidden-files: true
