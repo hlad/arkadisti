@@ -47,6 +47,14 @@ jobs:
           include-module: lxml.html
           windows-console-mode: disable
 
+      - name: Rename Linux binary
+        if: runner.os == 'Linux'
+        run: mv build/main.bin build/arkadisti.bin
+
+      - name: Rename Windows binary
+        if: runner.os == 'Windows'
+        run: mv build\main.exe build\arkadisti.exe
+
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
