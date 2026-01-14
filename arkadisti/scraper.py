@@ -90,7 +90,6 @@ class Scraper:
                 target_tables.append(table)
 
         if not target_tables:
-            print("No table found for %s." % game)
             return None
 
         target_table = target_tables[0]

@@ -19,8 +19,6 @@ class ScreenshotWindow(QDialog):
         self.current = None
 
         snap_dir = (self.config.get_snap_dir() / game).resolve()
-        # output_dir = self.config.get_output_dir().resolve()
-        # print(output_dir)
 
         self.ui = Ui_ScreenshotWindow()
         self.ui.setupUi(self)
@@ -30,8 +28,6 @@ class ScreenshotWindow(QDialog):
             Qt.WindowMinimizeButtonHint |
             Qt.WindowCloseButtonHint
         )
-        # self.statusBar().setSizeGripEnabled(False)
-        # self.sizeGrip.setVisible(False)
 
         icon = QIcon(":/icons/arkadisti.svg")
         self.setWindowIcon(icon)

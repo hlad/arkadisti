@@ -106,8 +106,6 @@ class MainWindow(QMainWindow):
             result = subprocess.run(
                 command, cwd=".", capture_output=True, text=True
             )
-            print(result)
-            print(result.returncode)
             if result.returncode != 0:
                 QMessageBox.warning(self, "Error", result.stderr)
             else:
@@ -115,7 +113,6 @@ class MainWindow(QMainWindow):
                 if screenshot_dlg.exec():
                     self.zip_inp(inp_file)
                     screenshot_file = screenshot_dlg.result_data
-                    print(screenshot_file)
                     if not screenshot_file:
                         QMessageBox.warning(
                             self,
@@ -189,11 +186,9 @@ class MainWindow(QMainWindow):
             self.config.get_inp_dir(),
         ]
         self.log("Spouštím: " + " ".join(str(x) for x in command))
-        result = subprocess.run(
+        _ = subprocess.run(
             command, cwd=".", capture_output=True, text=True
         )
-
-        print(result)
 
         filename_store.unlink(missing_ok=True)
 
