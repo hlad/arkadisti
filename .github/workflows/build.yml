@@ -46,6 +46,7 @@ jobs:
           enable-plugins: pyside6
           include-module: lxml.html
           windows-console-mode: disable
+          windows-icon-from-ico: arkadisti/res/arkadisti.ico
 
       - name: Rename Linux binary
         if: runner.os == 'Linux'
