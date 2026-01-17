@@ -64,6 +64,14 @@ class MainWindow(QMainWindow):
         shortcut_f1 = QShortcut(QKeySequence("F1"), self)
         shortcut_f1.activated.connect(self.play_button_pressed)
 
+        shortcut_enter = QShortcut(QKeySequence("Enter"), self)
+        shortcut_enter.activated.connect(self.play_button_pressed)
+
+        shortcut_return = QShortcut(QKeySequence("Return"), self)
+        shortcut_return.activated.connect(self.play_button_pressed)
+
+        self.ui.gamesView.doubleClicked.connect(self.play_button_pressed)
+
         shortcut_f2 = QShortcut(QKeySequence("F2"), self)
         shortcut_f2.activated.connect(self.replay_button_pressed)
 
