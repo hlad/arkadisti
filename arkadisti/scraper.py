@@ -64,9 +64,27 @@ class Scraper:
 
         for h3 in soup.find_all("h3"):
             text = h3.get_text(strip=True)
-            match = re.search(r"ROM:\s*([a-zA-Z0-9_]+)", text)
+            match = re.search(r"(.+) ROM:\s*([a-zA-Z0-9_]+)", text)
             if match:
-                roms.append(match.group(1))
+                name = match.group(1)
+                rom = match.group(2)
+                tournament_id = None
+                method = None
+                action = None
+                h4 = h3.find_next("h4")
+                if h4:
+                    form = h4.find_next("form")
+                    tournament_input = form.find(
+                        "input", {"name": "tournament_id"}
+                    )
+                    tournament_id = (
+                        tournament_input.get("value")
+                        if tournament_input
+                        else None
+                    )
+                    method = form.get("method")
+                    action = form.get("action")
+                roms.append([rom, name, tournament_id, method, action])
 
         return roms
 
@@ -105,7 +123,7 @@ class Scraper:
             .astype(int)
         )
 
-        df = df.drop(columns=['Screenshot', 'INP'])
+        df = df.drop(columns=["Screenshot", "INP"])
 
         avatar_urls = []
         for row in target_table.find_all("tr"):
@@ -144,8 +162,16 @@ class Scraper:
             roms = Scraper.get_rom_names(a["content"]["rendered"])
             games = games + roms
             for rom in roms:
-                df = Scraper.scrape_table(a["content"]["rendered"], rom)
-                store[rom] = df
-        games_df = pd.DataFrame(games, columns=["games"])
+                df = Scraper.scrape_table(a["content"]["rendered"], rom[0])
+                store[rom[0]] = df
+        games_df = pd.DataFrame(
+            games,
+            columns=["games", "name", "tournament_id", "method", "action"],
+        )
+        games_df["tournament_id"] = games_df["tournament_id"].astype("string")
+        games_df["games"] = games_df["games"].astype("string")
+        games_df["name"] = games_df["name"].astype("string")
+        games_df["method"] = games_df["method"].astype("string")
+        games_df["action"] = games_df["action"].astype("string")
         store["games"] = games_df
         store.close()
