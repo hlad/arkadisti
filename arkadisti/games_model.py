@@ -7,7 +7,7 @@ STORE_FILE = "store.h5"
 class GamesModel(QAbstractListModel):
     def __init__(self):
         super().__init__()
-        store = pd.HDFStore("store.h5")
+        store = pd.HDFStore(STORE_FILE)
         if "games" in store:
             self._data = store["games"]
         else:
@@ -40,7 +40,7 @@ class GamesModel(QAbstractListModel):
     def reload(self):
         self.beginResetModel()
 
-        with pd.HDFStore("store.h5") as store:
+        with pd.HDFStore(STORE_FILE) as store:
             if "games" in store:
                 self._data = store["games"]
             else:

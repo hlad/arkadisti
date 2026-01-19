@@ -155,7 +155,7 @@ class Scraper:
 
         games = []
 
-        store = pd.HDFStore("store.h5", mode="w")
+        store = pd.HDFStore(STORE_FILE, mode="w")
 
         all = Scraper.get_all()
         for _k, a in all.items():

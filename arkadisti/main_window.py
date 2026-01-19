@@ -21,8 +21,6 @@ from .screenshot_window import ScreenshotWindow
 from .settings_dialog import SettingsDialog
 from .ui.ui_main_window import Ui_MainWindow
 
-STORE_FILE = "store.h5"
-
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
