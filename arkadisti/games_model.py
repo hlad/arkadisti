@@ -18,9 +18,21 @@ class GamesModel(QAbstractListModel):
         self.endResetModel()
 
     def data(self, index, role):
+        row = index.row()
+
+        if row < 0 or row >= len(self._data):
+            return None
+
+        if not isinstance(row, int):
+            return None
+
         if role == Qt.DisplayRole:
-            value = self._data.iloc[index.row(), index.column()]
-            return str(value)
+            name = self._data.loc[row, "name"]
+            return name
+        elif role == Qt.UserRole:
+            game = self._data.loc[row, "games"]
+            return game
+        return None
 
     def rowCount(self, index):
         return self._data.shape[0]

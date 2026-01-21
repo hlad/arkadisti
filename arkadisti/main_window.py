@@ -200,7 +200,7 @@ class MainWindow(QMainWindow):
 
     def on_selection_changed(self, current: QModelIndex, *_):
         index = self.ui.gamesView.currentIndex()
-        game = index.data()
+        game = index.data(Qt.UserRole)
 
         # self.results_model = ResultsModel(game)
         # self.ui.resultsTable.setModel(self.results_model)
