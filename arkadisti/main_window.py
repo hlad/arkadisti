@@ -155,7 +155,7 @@ class MainWindow(QMainWindow):
         dlg.exec()
 
     def download_button_pressed(self):
-        self.log("Stahuji data...(může trva pár sekund)")
+        self.log("Stahuji data...(může trvat pár sekund)")
         Scraper.download()
         self.log("Data stažena")
         self.model.reload()
