@@ -32,6 +32,15 @@ class GamesModel(QAbstractListModel):
         elif role == Qt.UserRole:
             game = self._data.loc[row, "games"]
             return game
+        elif role == Qt.UserRole+1:
+            tournament_id = self._data.loc[row, "tournament_id"]
+            return tournament_id
+        elif role == Qt.UserRole+2:
+            method = self._data.loc[row, "method"]
+            return method
+        elif role == Qt.UserRole+3:
+            action = self._data.loc[row, "action"]
+            return action
         return None
 
     def rowCount(self, index):
