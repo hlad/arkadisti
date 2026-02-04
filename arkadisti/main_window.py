@@ -98,6 +98,17 @@ class MainWindow(QMainWindow):
                 )
                 return
 
+            nvram_directory = self.check_nvram_saved()
+
+            if nvram_directory:
+                QMessageBox.warning(
+                    self,
+                    "Warning",
+                    "Je ulozeno NVRAM, "
+                    "prosim smaz adresar %s" % (nvram_directory.resolve()),
+                )
+                return
+
             command = [
                 mame_binary_path,
                 game,
@@ -107,6 +118,7 @@ class MainWindow(QMainWindow):
                 self.config.get_inp_dir(),
                 "-snapshot_directory",
                 self.config.get_snap_dir(),
+                '-nonvram_save',
             ]
             self.log("Spouštím: " + " ".join(str(x) for x in command))
             result = subprocess.run(
@@ -230,6 +242,33 @@ class MainWindow(QMainWindow):
         msg_out = str("[%s] %s" % (str(current_time), msg))
         self.ui.logView.append(msg_out)
         QApplication.processEvents()
+
+    def check_nvram_saved(self):
+        mame_binary_path = self.config.get_mame_binary().resolve()
+
+        command = [
+            mame_binary_path,
+            "-showconfig",
+        ]
+
+        result = subprocess.run(
+            command, cwd=".", capture_output=True, text=True
+        )
+
+        mame_config = result.stdout
+        nvram_save = [
+            line
+            for line in mame_config.splitlines()
+            if "nvram_directory" in line
+        ][0]
+        nvram_directory_setting = nvram_save.split()[1]
+
+        nvram_directory = Path(nvram_directory_setting) / self.selected_game
+
+        if nvram_directory.exists() and nvram_directory.is_dir():
+            return nvram_directory
+        else:
+            return False
 
 
 if __name__ == "__main__":
