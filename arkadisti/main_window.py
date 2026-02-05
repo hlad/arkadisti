@@ -80,7 +80,8 @@ class MainWindow(QMainWindow):
 
     def data_check(self):
         games_count = self.model.rowCount(QModelIndex)
-        if games_count == 0:
+        games = self.model.get_games()
+        if games_count == 0 or 'name' not in games.columns:
             self.download_button_pressed()
             first_index = self.model.index(0, 0)
             self.ui.gamesView.setCurrentIndex(first_index)

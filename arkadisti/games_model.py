@@ -27,7 +27,10 @@ class GamesModel(QAbstractListModel):
             return None
 
         if role == Qt.DisplayRole:
-            name = self._data.loc[row, "name"]
+            try:
+                name = self._data.loc[row, "name"]
+            except Exception:
+                return None
             return name
         elif role == Qt.UserRole:
             game = self._data.loc[row, "games"]
@@ -68,3 +71,6 @@ class GamesModel(QAbstractListModel):
                 self._data = pd.DataFrame()
 
         self.endResetModel()
+
+    def get_games(self):
+        return self._data
