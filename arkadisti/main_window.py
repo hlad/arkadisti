@@ -203,6 +203,8 @@ class MainWindow(QMainWindow):
             filename,
             "-input_directory",
             self.config.get_inp_dir(),
+            '-inpview',
+            '1',
         ]
         self.log("Spouštím: " + " ".join(str(x) for x in command))
         _ = subprocess.run(
