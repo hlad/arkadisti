@@ -232,13 +232,13 @@ class MainWindow(QMainWindow):
     def on_selection_changed(self, current: QModelIndex, *_):
         index = self.ui.gamesView.currentIndex()
         game = index.data(Qt.UserRole)
-
-        # self.results_model = ResultsModel(game)
-        # self.ui.resultsTable.setModel(self.results_model)
         self.results_model.reload(game)
-        self.ui.resultsTable.hideColumn(4)
+
         self.ui.resultsTable.hideColumn(5)
         self.ui.resultsTable.hideColumn(6)
+        self.ui.resultsTable.hideColumn(7)
+
+        self.ui.resultsTable.setColumnWidth(4, 120)
 
         self.ui.resultsTable.selectionModel().currentChanged.connect(
             self.on_selection_changed_table
