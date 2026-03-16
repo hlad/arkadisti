@@ -19,6 +19,7 @@ from .results_model import ResultsModel
 from .scraper import Scraper
 from .screenshot_window import ScreenshotWindow
 from .settings_dialog import SettingsDialog
+from .storage_manager import StorageManager
 from .ui.ui_main_window import Ui_MainWindow
 
 
@@ -49,6 +50,8 @@ class MainWindow(QMainWindow):
         self.ui.gamesView.selectionModel().currentChanged.connect(
             self.on_selection_changed
         )
+
+        self.store = StorageManager()
 
         self.results_model = ResultsModel()
         self.ui.resultsTable.setModel(self.results_model)
@@ -169,10 +172,23 @@ class MainWindow(QMainWindow):
 
     def download_button_pressed(self):
         self.log("Stahuji data...(může trvat pár sekund)")
-        Scraper.download()
+        self.scraper = Scraper(self.store)
+        self.scraper.finished.connect(self.scraper_on_finished)
+        self.ui.playButton.setEnabled(False)
+        self.ui.replayButton.setEnabled(False)
+        self.ui.downloadButton.setEnabled(False)
+        self.ui.settingsButton.setEnabled(False)
+        self.scraper.start()
+
+    def scraper_on_finished(self):
         self.log("Data stažena")
+        self.scraper = None
         self.model.reload()
         self.results_model.reload(self.selected_game)
+        self.ui.playButton.setEnabled(True)
+        self.ui.replayButton.setEnabled(True)
+        self.ui.downloadButton.setEnabled(True)
+        self.ui.settingsButton.setEnabled(True)
 
     def replay_button_pressed(self):
         if not self.selected_input:

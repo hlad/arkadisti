@@ -12,3 +12,9 @@ class StorageManager:
 
     def get_games(self):
         return self.store["games"]
+
+    def set_game(self, game, data):
+        self.store[game] = data
+
+    def set_games(self, games):
+        self.store["games"] = games

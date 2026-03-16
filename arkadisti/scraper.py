@@ -4,17 +4,23 @@ from io import StringIO
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-from PySide6.QtCore import Signal
+from PySide6.QtCore import QThread, Signal
 
 API_URL = "https://hrynehrajeme.cz/wp-json/wp/v2/posts/"
 STORE_FILE = "store.h5"
 
 
-class Scraper:
+class Scraper(QThread):
     progress = Signal(int)
 
-    @staticmethod
-    def get_newest():
+    def __init__(self, store):
+        self.store = store
+        super().__init__()
+
+    def run(self):
+        self.download()
+
+    def get_newest(self):
         response = requests.get(API_URL)
         response.raise_for_status()
 
@@ -36,8 +42,7 @@ class Scraper:
 
         return newest
 
-    @staticmethod
-    def get_all():
+    def get_all(self):
         response = requests.get(API_URL)
         response.raise_for_status()
 
@@ -56,8 +61,7 @@ class Scraper:
 
         return posts_result
 
-    @staticmethod
-    def get_rom_names(content):
+    def get_rom_names(self, content):
         soup = BeautifulSoup(content, "html.parser")
 
         roms = []
@@ -88,8 +92,7 @@ class Scraper:
 
         return roms
 
-    @staticmethod
-    def scrape_table(content, game):
+    def scrape_table(self, content, game):
         soup = BeautifulSoup(content, "html.parser")
 
         tables = soup.find_all("table")
@@ -150,20 +153,17 @@ class Scraper:
 
         return df
 
-    @staticmethod
-    def download():
-
+    def download(self):
         games = []
 
-        store = pd.HDFStore(STORE_FILE, mode="w")
-
-        all = Scraper.get_all()
+        all = self.get_all()
         for _k, a in all.items():
-            roms = Scraper.get_rom_names(a["content"]["rendered"])
+            roms = self.get_rom_names(a["content"]["rendered"])
             games = games + roms
             for rom in roms:
-                df = Scraper.scrape_table(a["content"]["rendered"], rom[0])
-                store[rom[0]] = df
+                game = rom[0]
+                df = self.scrape_table(a["content"]["rendered"], game)
+                self.store.set_game(game, df)
         games_df = pd.DataFrame(
             games,
             columns=["games", "name", "tournament_id", "method", "action"],
@@ -173,5 +173,4 @@ class Scraper:
         games_df["name"] = games_df["name"].astype("string")
         games_df["method"] = games_df["method"].astype("string")
         games_df["action"] = games_df["action"].astype("string")
-        store["games"] = games_df
-        store.close()
+        self.store.set_games(games_df)
