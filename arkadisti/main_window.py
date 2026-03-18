@@ -252,9 +252,9 @@ class MainWindow(QMainWindow):
     def on_selection_changed_table(self, current: QModelIndex, *_):
         index = self.ui.resultsTable.currentIndex()
         row = index.row()
-        self.selected_input = self.results_model.index(row, 5).data()
-        self.selected_screenshot = self.results_model.index(row, 6).data()
-        self.selected_avatar = self.results_model.index(row, 4).data()
+        self.selected_input = self.results_model.index(row, 6).data()
+        self.selected_screenshot = self.results_model.index(row, 7).data()
+        self.selected_avatar = self.results_model.index(row, 5).data()
 
     def log(self, msg: str):
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
