@@ -288,10 +288,3 @@ class MainWindow(QMainWindow):
             return nvram_directory
         else:
             return False
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    widget = MainWindow()
-    widget.show()
-    sys.exit(app.exec())
