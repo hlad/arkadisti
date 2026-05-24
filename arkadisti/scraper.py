@@ -147,8 +147,10 @@ class Scraper(QThread):
         for row in target_table.find_all("tr"):
             all = row.find_all("a", href=True)
             for a in all:
-                if a and a.get("href").lower().endswith(".png"):
-                    screenshot_urls.append(a.get("href"))
+                ahref = a.get("href")
+                ahref_lower = ahref.lower()
+                if a and not ahref_lower.endswith(".zip"):
+                    screenshot_urls.append(ahref)
         df["Screenshot"] = screenshot_urls
 
         return df
