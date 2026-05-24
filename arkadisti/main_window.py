@@ -1,6 +1,5 @@
 import shutil
 import subprocess
-import sys
 import zipfile
 from datetime import datetime
 from io import BytesIO
@@ -202,32 +201,36 @@ class MainWindow(QMainWindow):
         # Download ZIP into memory
         self.log("Stahuji %s" % (url))
         response = requests.get(url)
-        zip_data = BytesIO(response.content)
+        if response.ok:
+            zip_data = BytesIO(response.content)
 
-        # Open ZIP from memory
-        with zipfile.ZipFile(zip_data) as z:
-            original_name = z.namelist()[0]
-            data = z.read(original_name)
+            # Open ZIP from memory
+            with zipfile.ZipFile(zip_data) as z:
+                original_name = z.namelist()[0]
+                data = z.read(original_name)
 
-            with open(filename_store, "wb") as f:
-                f.write(data)
-            # z.extractall("output_folder")   # <-- extracted files go here
-        command = [
-            self.config.get_mame_binary().resolve(),
-            self.selected_game,
-            "-playback",
-            filename,
-            "-input_directory",
-            self.config.get_inp_dir(),
-            '-inpview',
-            '1',
-        ]
-        self.log("Spouštím: " + " ".join(str(x) for x in command))
-        _ = subprocess.run(
-            command, cwd=".", capture_output=True, text=True
-        )
+                with open(filename_store, "wb") as f:
+                    f.write(data)
+            command = [
+                self.config.get_mame_binary().resolve(),
+                self.selected_game,
+                "-playback",
+                filename,
+                "-input_directory",
+                self.config.get_inp_dir(),
+                '-inpview',
+                '1',
+            ]
+            self.log("Spouštím: " + " ".join(str(x) for x in command))
+            result = subprocess.run(
+                command, cwd=".", capture_output=True, text=True
+            )
+            if result.returncode != 0:
+                QMessageBox.warning(self, "Error", result.stderr)
 
-        filename_store.unlink(missing_ok=True)
+            filename_store.unlink(missing_ok=True)
+        else:
+            QMessageBox.warning(self, "Error", "%s se nepodrailo stahnout: %d" % (url, response.status_code))
 
     def on_selection_changed(self, current: QModelIndex, *_):
         index = self.ui.gamesView.currentIndex()
