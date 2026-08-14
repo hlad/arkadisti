@@ -66,49 +66,37 @@ class Scraper(QThread):
 
         roms = []
 
-        for h3 in soup.find_all("h3"):
-            text = h3.get_text(strip=True)
-            match = re.search(r"(.+) ROM:\s*([a-zA-Z0-9_]+)", text)
-            if match:
-                name = match.group(1)
-                rom = match.group(2)
-                tournament_id = None
-                method = None
-                action = None
-                h4 = h3.find_next("h4")
-                if h4:
-                    form = h4.find_next("form")
-                    tournament_input = form.find(
-                        "input", {"name": "tournament_id"}
-                    )
-                    tournament_id = (
-                        tournament_input.get("value")
-                        if tournament_input
-                        else None
-                    )
-                    method = form.get("method")
-                    action = form.get("action")
-                roms.append([rom, name, tournament_id, method, action])
+        meta = soup.find_all("div", class_="wpat-game-meta")
+        for m in meta:
+            tournament_id = None
+            method = None
+            action = None
+            name = m.find("h3").get_text(strip=True)
+            rom = m.find("div", class_="wpat-game-rom").get_text(strip=True).replace("ROM: ", "")
+            dates = m.find("div", class_="wpat-game-dates").get_text(strip=True)
+            h4 = m.find_next("h4")
+            if h4:
+                form = h4.find_next("form")
+                tournament_input = form.find("input", {"name": "tournament_id"})
+                tournament_id = tournament_input.get("value") if tournament_input else None
+                method = form.get("method")
+                action = form.get("action")
+            roms.append([rom, name, tournament_id, method, action])
 
         return roms
 
     def scrape_table(self, content, game):
         soup = BeautifulSoup(content, "html.parser")
 
-        tables = soup.find_all("table")
+        tables = soup.find_all("table", class_="wpat-leaderboard")
 
         target_tables = []
 
         for table in tables:
-            found = False
-            for sibling in table.find_previous_siblings():
-                if sibling.name in ["h1", "h2", "h3", "h4", "h5", "h6"]:
-                    text = sibling.get_text(strip=True)
-                    if game in text:
-                        found = True
-                        break
-            if found:
+            text = table.find_previous("div", class_="wpat-game-rom").get_text(strip=True)
+            if game in text:
                 target_tables.append(table)
+                break
 
         if not target_tables:
             return None
